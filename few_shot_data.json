@@ -1,0 +1,10 @@
+[
+  {
+    "requirement": "Write a function that takes a list of integers and returns only the even numbers squared.",
+    "code": "def square_even_numbers(numbers: list[int]) -> list[int]:\n    \"\"\"Return squared even numbers from the list.\"\"\"\n    return [x**2 for x in numbers if x % 2 == 0]"
+  },
+  {
+    "requirement": "Create a function to calculate the frequency of each word in a string, ignoring case and punctuation.",
+    "code": "import re\nfrom collections import Counter\n\ndef word_frequency(text: str) -> dict[str, int]:\n    \"\"\"Calculate word frequencies ignoring case and punctuation.\"\"\"\n    words = re.findall(r'\\b\\w+\\b', text.lower())\n    return dict(Counter(words))"
+  }
+]
