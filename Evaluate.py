@@ -2,7 +2,6 @@ import os
 import sys
 from generator import CodeSnippetGenerator
 
-# A suite of 5 standard developer scenarios to test functional correctness
 test_cases = [
     {
         "requirement": "Write a function add_numbers(a, b) that returns the sum of two numbers.",
@@ -34,7 +33,6 @@ test_cases = [
 def run_evaluation():
     if not os.environ.get("GEMINI_API_KEY"):
         print("❌ Error: GEMINI_API_KEY environment variable is not set.")
-        print("Please run: export GEMINI_API_KEY='your-api-key'")
         sys.exit(1)
 
     generator = CodeSnippetGenerator()
@@ -42,15 +40,12 @@ def run_evaluation():
     syntax_passed = 0
     execution_passed = 0
 
-    print(f"Starting evaluation across {total} test scenarios...\n" + "="*60)
+    print(f"Starting LangChain RAG evaluation across {total} test scenarios...\n" + "="*60)
 
     for i, test in enumerate(test_cases, start=1):
         print(f"\nTest {i}: {test['requirement']}")
-        
-        # 1. Generate the code using the pipeline
         result = generator.generate_code(test['requirement'])
 
-        # 2. Evaluate Syntax Correctness (AST Parsing)
         if not result["is_valid"]:
             print(f"  ❌ Syntax Validation Failed: {result['message']}")
             continue
@@ -58,13 +53,9 @@ def run_evaluation():
         syntax_passed += 1
         print("  ✅ AST Syntax: Valid")
 
-        # 3. Evaluate Functional Correctness (Execution Isolation)
         local_scope = {}
         try:
-            # Safely compile and execute the generated function into a dictionary namespace
             exec(result["code"], {}, local_scope)
-            
-            # Execute the specific test assertion against the generated function
             actual = eval(test["test_call"], {}, local_scope)
             
             if actual == test["expected"]:
@@ -75,7 +66,6 @@ def run_evaluation():
         except Exception as e:
             print(f"  ❌ Execution Error: {e}")
 
-    # 4. Calculate Final Benchmarks
     syntax_rate = (syntax_passed / total) * 100
     functional_rate = (execution_passed / total) * 100
 
